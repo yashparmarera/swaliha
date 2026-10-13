@@ -18,7 +18,7 @@ function Book() {
       </PageIntro>
       <BookingBand />
       <VisitClinic />
-      <section className="faq-section section-inner">
+      <section className="faq-section section-inner reveal">
         <span className="eyebrow">A FEW THINGS YOU MAY BE WONDERING</span>
         <h2>
           Before we <em>begin.</em>

@@ -1,5 +1,6 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import {
   ArrowUpRight,
   ArrowRight,
@@ -63,6 +64,8 @@ export function Brand() {
 }
 export function WebsiteShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  useScrollReveal([pathname]);
   return (
     <>
       <header className="site-header">
@@ -160,7 +163,7 @@ const footerNav = [
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div className="footer-grid">
+      <div className="footer-grid reveal reveal-stagger">
         <div className="footer-brand">
           <Brand />
           <p>
@@ -275,6 +278,36 @@ export function Botanical({ className = "" }: { className?: string }) {
         strokeWidth="1.2"
       />
     </svg>
+  );
+}
+export const marqueeWords = [
+  "Stress",
+  "Anxiety",
+  "Sleep",
+  "Self-Confidence",
+  "Relationships",
+  "Habits",
+  "Emotional Well-being",
+  "Hypnotherapy",
+  "Personal Growth",
+  "Trauma-Informed Care",
+];
+export function KeywordMarquee() {
+  return (
+    <div className="marquee" aria-hidden="true">
+      <div className="marquee-track">
+        {[0, 1].map((copy) => (
+          <div className="marquee-group" key={copy}>
+            {marqueeWords.map((word) => (
+              <span className="marquee-item" key={`${copy}-${word}`}>
+                {word}
+                <span className="marquee-dot" />
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 // Decorative background motifs — calming, therapy-relevant line art.
@@ -419,7 +452,7 @@ export const supportAreas = [
 ];
 export function SupportGrid({ all = false }: { all?: boolean }) {
   return (
-    <div className="support-grid">
+    <div className="support-grid reveal reveal-stagger">
       {supportAreas.slice(0, all ? 8 : 4).map(({ icon: Icon, title, text }, i) => (
         <Link to="/support" className="support-item" key={title}>
           <div className="support-top">
@@ -439,7 +472,7 @@ export function BookingBand() {
     <section className="booking-band">
       <CalmWaves className="booking-waves" />
       <div className="section-inner booking-inner">
-        <div>
+        <div className="reveal">
           <span className="eyebrow">YOUR FIRST STEP, AT YOUR OWN PACE</span>
           <h2>
             You don’t have to
@@ -452,7 +485,7 @@ export function BookingBand() {
             Let’s begin with a conversation.
           </p>
         </div>
-        <div className="booking-options">
+        <div className="booking-options reveal reveal-d1">
           <div>
             <MapPin strokeWidth={1.5} />
             <span>
@@ -490,14 +523,27 @@ export function PageIntro({
 }) {
   return (
     <section className="page-intro section-inner">
-      <span className="eyebrow">
+      <span className="eyebrow reveal in">
         <span className="tiny-dot" />
         {eyebrow}
       </span>
-      <h1>
+      <h1 className="reveal in reveal-d1">
         {title} {accent && <em>{accent}</em>}
+        <svg
+          className="page-intro-squiggle squiggle-draw in"
+          viewBox="0 0 118 12"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M2 9 Q 10 2 18 9 T 34 9 T 50 9 T 66 9 T 82 9 T 98 9 T 114 9"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
       </h1>
-      {children && <p>{children}</p>}
+      {children && <p className="reveal in reveal-d2">{children}</p>}
       <Botanical />
     </section>
   );
@@ -506,13 +552,13 @@ export function Location() {
   return (
     <section className="location section-inner">
       <LeafSprig className="location-sprig" />
-      <div>
+      <div className="reveal">
         <span className="eyebrow">A WELCOMING SPACE IN WEST DELHI</span>
         <h2>
           Find us in <em>Punjabi Bagh.</em>
         </h2>
       </div>
-      <div className="location-address">
+      <div className="location-address reveal reveal-d1">
         <MapPin strokeWidth={1.3} />
         <div>
           <h3>Doctors Plaza Punjabi Bagh</h3>
@@ -531,6 +577,111 @@ export function CareNote() {
       <ShieldCheck size={21} /> Elderly well-being and chronic-pain support is complementary and
       does not replace medical care or pain treatment.
     </p>
+  );
+}
+export const aboutPillars = [
+  {
+    n: "01",
+    title: "Individual-centred",
+    text: "Sessions shaped around you — not a template. Your story leads the way.",
+  },
+  {
+    n: "02",
+    title: "Compassionate",
+    text: "A non-judgmental space where nothing you share is ever “too much”.",
+  },
+  {
+    n: "03",
+    title: "Goal-oriented",
+    text: "Practical tools and self-awareness you can carry beyond the session.",
+  },
+];
+export function AboutHero() {
+  const [imageFailed, setImageFailed] = useState(false);
+  return (
+    <section className="about-hero section-inner">
+      <aside className="about-card reveal">
+        <div className="about-card-portrait">
+          <Flower2 className="about-card-lotus" strokeWidth={1} aria-hidden="true" />
+          {!imageFailed && (
+            <img
+              src={doctorPortrait}
+              alt="Dr Swaliha Khanam, Clinical Hypnotherapist, at her clinic in Punjabi Bagh, New Delhi"
+              width={1066}
+              height={1280}
+              loading="lazy"
+              decoding="async"
+              onError={() => setImageFailed(true)}
+            />
+          )}
+        </div>
+        <h3>Dr Swaliha Khanam</h3>
+        <p className="about-card-role">Clinical Hypnotherapist · Mental Health Coach</p>
+        <div className="about-card-divider" />
+        <p className="about-card-loc">
+          <MapPin size={15} strokeWidth={1.6} />
+          Doctors Plaza, 63 W Ave Road, West Punjabi Bagh, New Delhi 110026
+        </p>
+        <div className="about-card-tags">
+          <span>Trauma-informed</span>
+          <span>POCSO-experienced</span>
+          <span>Confidential</span>
+        </div>
+      </aside>
+      <div className="about-narrative">
+        <span className="eyebrow reveal">
+          <span className="tiny-dot" />
+          ABOUT DR SWALIHA
+        </span>
+        <h2 className="reveal reveal-d1">
+          Support that meets you <em>where you are</em>
+          <svg
+            className="about-squiggle squiggle-draw"
+            viewBox="0 0 118 12"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M2 9 Q 10 2 18 9 T 34 9 T 50 9 T 66 9 T 82 9 T 98 9 T 114 9"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </svg>
+        </h2>
+        <p className="reveal reveal-d2">
+          Every individual experiences life differently. Stress, anxiety, emotional difficulties,
+          relationship concerns, low self-confidence, sleep difficulties, unhealthy habits, and
+          challenging life experiences can all affect the way we think, feel, behave, and connect
+          with others.
+        </p>
+        <p className="reveal reveal-d2">
+          Dr Swaliha Khanam is committed to creating a safe, supportive, and non-judgmental space
+          where you can express yourself openly, understand your experiences, and work towards
+          greater emotional well-being and personal growth — at your own pace.
+        </p>
+        <blockquote className="about-pull reveal reveal-d2">
+          “I believe meaningful change begins with feeling heard, understood, and respected.”
+        </blockquote>
+        <p className="reveal reveal-d2">
+          Her approach uses hypnotherapy as a supportive tool to explore patterns in thoughts,
+          emotions, and behaviours — and to develop more adaptive, healthier responses. Rather than
+          focusing only on a presenting concern, she looks at the whole person: your experiences,
+          needs, strengths, and circumstances.
+        </p>
+        <div className="about-pillars reveal reveal-stagger reveal-d2">
+          {aboutPillars.map((p) => (
+            <div className="about-pillar" key={p.n}>
+              <b>{p.n}</b>
+              <div>
+                <h4>{p.title}</h4>
+                <p>{p.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 export const selfCheckPrompts = [
@@ -560,7 +711,7 @@ export function SelfCheck() {
   return (
     <section className="selfcheck section-inner">
       <BreathRings className="selfcheck-rings" />
-      <div className="selfcheck-head">
+      <div className="selfcheck-head reveal">
         <span className="eyebrow">
           <span className="tiny-dot" />
           WHO CAN SEEK SUPPORT
@@ -573,7 +724,11 @@ export function SelfCheck() {
           notice what you might like to talk about.
         </p>
       </div>
-      <div className="selfcheck-pills" role="group" aria-label="Concerns that feel familiar">
+      <div
+        className="selfcheck-pills reveal reveal-stagger reveal-d1"
+        role="group"
+        aria-label="Concerns that feel familiar"
+      >
         {selfCheckPrompts.map((prompt) => {
           const on = selected.includes(prompt);
           return (
@@ -590,7 +745,7 @@ export function SelfCheck() {
           );
         })}
       </div>
-      <div className="selfcheck-result">
+      <div className="selfcheck-result reveal reveal-d2">
         <span className="selfcheck-count">{count} selected</span>
         <p>{message}</p>
         <Button asChild variant="therapy">
@@ -720,7 +875,7 @@ export function WhatIsHypnotherapy() {
     <section className="hypno-section">
       <CalmWaves className="hypno-waves" />
       <div className="section-inner hypno-grid">
-        <div className="hypno-copy">
+        <div className="hypno-copy reveal">
           <span className="eyebrow">
             <span className="tiny-dot" />
             THE SCIENCE OF TRANCE
@@ -754,7 +909,7 @@ export function WhatIsHypnotherapy() {
             ))}
           </div>
         </div>
-        <aside className="hypno-card">
+        <aside className="hypno-card reveal reveal-d1">
           <div className="hypno-card-head">
             <h3>How sessions flow</h3>
             <span className="hypno-badge">3-stage approach</span>
@@ -794,7 +949,7 @@ export function TraumaCare() {
     "Hello Dr Swaliha Khanam, I would like to make a confidential enquiry about sensitive, trauma-informed support.";
   return (
     <section className="trauma-care section-inner">
-      <div className="trauma-card">
+      <div className="trauma-card reveal">
         <div className="trauma-copy">
           <span className="trauma-badge">
             <ShieldCheck size={13} strokeWidth={2} />
@@ -836,7 +991,7 @@ export function VisitClinic() {
   const directionsMessage = `Hello Dr Swaliha Khanam, I would like directions to the clinic for my appointment. Could you please confirm the location?\n\n${directionsUrl}`;
   return (
     <section className="visit-clinic section-inner">
-      <div className="visit-copy">
+      <div className="visit-copy reveal">
         <span className="eyebrow">
           <span className="tiny-dot" />
           NEW DELHI PRACTICE
@@ -885,7 +1040,7 @@ export function VisitClinic() {
         </a>
       </div>
       <a
-        className="visit-map"
+        className="visit-map reveal reveal-d1"
         href={directionsUrl}
         target="_blank"
         rel="noreferrer"

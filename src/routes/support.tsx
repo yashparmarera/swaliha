@@ -23,7 +23,7 @@ function Support() {
         </div>
       </section>
       <SelfCheck />
-      <section className="section-inner faq-section">
+      <section className="section-inner faq-section reveal">
         <span className="eyebrow">A SAFE SPACE TO HEAL & GROW</span>
         <h2>
           You can begin <em>where you are.</em>

@@ -1,10 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Leaf, Heart, ShieldCheck, Sprout, MapPin, Flower2 } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Leaf, MapPin, Flower2 } from "lucide-react";
 import {
+  AboutHero,
   AppointmentButton,
   Botanical,
   BreathRings,
   CalmWaves,
+  KeywordMarquee,
   SeedScatter,
   SupportGrid,
   SelfCheck,
@@ -38,7 +40,12 @@ function Index() {
           <h1>
             A safe space to <em>breathe</em>, heal &amp; grow.
           </h1>
-          <svg className="hero-squiggle" viewBox="0 0 115 12" fill="none" aria-hidden="true">
+          <svg
+            className="hero-squiggle squiggle-draw in"
+            viewBox="0 0 115 12"
+            fill="none"
+            aria-hidden="true"
+          >
             <path
               d="M2 9C27 1 70 2 112 6M10 11C40 5 79 5 104 8"
               stroke="currentColor"
@@ -98,27 +105,11 @@ function Index() {
         </div>
         <Botanical className="hero-botanical" />
       </section>
-      <div className="values-strip">
-        <span>
-          <ShieldCheck />A safe, non-judgmental space
-        </span>
-        <span>
-          <Heart />
-          Compassionate, individual-centred care
-        </span>
-        <span>
-          <Sprout />
-          Your pace. Your journey.
-        </span>
-        <span>
-          <Leaf />
-          Trauma-informed support
-        </span>
-      </div>
+      <KeywordMarquee />
       <section className="support-section">
         <CalmWaves className="support-waves" />
         <div className="section-inner">
-          <div className="section-heading">
+          <div className="section-heading reveal">
             <div>
               <span className="eyebrow">AREAS OF SUPPORT</span>
               <h2>
@@ -136,39 +127,7 @@ function Index() {
         </div>
       </section>
       <SelfCheck />
-      <section className="approach-section section-inner">
-        <div className="approach-visual">
-          <img
-            src={doctorPortrait}
-            alt="Dr Swaliha Khanam in her clinic"
-            className="approach-photo"
-            width={1066}
-            height={1280}
-            loading="lazy"
-            decoding="async"
-          />
-          <span>ROOTED IN COMPASSION</span>
-        </div>
-        <div className="approach-copy">
-          <span className="eyebrow">MY APPROACH</span>
-          <h2>
-            Not just your concerns.
-            <br />
-            <em>You, as a whole person.</em>
-          </h2>
-          <p>
-            Rather than focusing only on a single concern, I take time to understand you as a whole
-            person — your experiences, needs, strengths, and the circumstances you are navigating.
-          </p>
-          <p>
-            There is no rush and nothing you share is ever “too much”. We move at your pace, in a
-            space built on being heard, understood, and respected.
-          </p>
-          <Link to="/about" className="text-link">
-            A little more about me <ArrowRight size={16} />
-          </Link>
-        </div>
-      </section>
+      <AboutHero />
       <WhatIsHypnotherapy />
       <TraumaCare />
       <ClientReviews />
