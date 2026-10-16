@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageIntro, AboutHero, BookingBand } from "@/components/therapy";
+import { AboutPractical, FirstSession, HowIWork, WhoIWorkWith } from "@/components/about-sections";
 import { ExploreNext } from "@/components/explore";
 import { pageHead } from "@/lib/clinic";
 export const Route = createFileRoute("/about")({
   head: () =>
     pageHead(
       "About Me",
-      "Meet Swaliha Khanam and learn about her compassionate, individual-centred clinical hypnotherapy and trauma-informed approach.",
+      "Meet Swaliha Khanam, Clinical Hypnotherapist and Mental Health Coach in Punjabi Bagh. See how she works, what a first session is like, and who she supports.",
     ),
   component: About,
 });
@@ -20,7 +21,11 @@ function About() {
       >
         Clinical Hypnotherapist & Mental Health Coach · Punjabi Bagh, New Delhi
       </PageIntro>
-      <AboutHero />
+      <AboutHero variant="full" />
+      <HowIWork />
+      <FirstSession />
+      <WhoIWorkWith />
+      <AboutPractical />
       <section className="trauma-band">
         <div className="section-inner reveal">
           <span className="eyebrow">EMOTIONAL SAFETY COMES FIRST</span>

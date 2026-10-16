@@ -30,6 +30,11 @@ export function selfCheckUrl(selected: string[]) {
     : "";
   return whatsappUrl(intro + body);
 }
+export function aboutQuestionUrl() {
+  return whatsappUrl(
+    "Hello Swaliha Khanam, I read about how you work and have a question before booking an appointment.",
+  );
+}
 export const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinic.address)}`;
 export const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(clinic.address)}&z=14&output=embed`;
 export function pageHead(title: string, description: string) {

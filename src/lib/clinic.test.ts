@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { appointmentUrl, pricing } from "./clinic";
+import { aboutQuestionUrl, appointmentUrl, pricing } from "./clinic";
 describe("Supplied consultation rules", () => {
   it("offers clinic visits at a discounted ₹2,000 (from ₹3,000) and includes the fee in the request", () => {
     expect(pricing["Clinic visit"]).toEqual({ original: 3000, price: 2000 });
@@ -18,5 +18,11 @@ describe("Supplied consultation rules", () => {
       expect(url.origin).toBe("https://wa.me");
       expect(url.pathname).toBe("/918796142665");
     }
+  });
+  it("builds the About page question link from the shared WhatsApp helper", () => {
+    const url = new URL(aboutQuestionUrl());
+    expect(url.origin).toBe("https://wa.me");
+    expect(url.pathname).toBe("/918796142665");
+    expect(url.searchParams.get("text")).toContain("question");
   });
 });

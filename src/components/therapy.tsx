@@ -629,7 +629,8 @@ export const aboutPillars = [
     text: "Practical tools and self-awareness you can carry beyond the session.",
   },
 ];
-export function AboutHero() {
+/** `compact` is the Home teaser; `full` is used on /about, where dedicated sections follow. */
+export function AboutHero({ variant = "compact" }: { variant?: "compact" | "full" }) {
   const [imageFailed, setImageFailed] = useState(false);
   return (
     <section className="about-hero section-inner">
@@ -713,12 +714,15 @@ export function AboutHero() {
             </div>
           ))}
         </div>
-        <p className="about-links reveal">
-          See this approach in practice: explore the <Link to="/support">areas of support</Link>,
-          read the <Link to="/blog">researched case studies</Link>, hear{" "}
-          <Link to="/reviews">what clients say</Link>, or{" "}
-          <Link to="/book">book a conversation</Link>.
-        </p>
+        {variant === "compact" && (
+          <p className="about-links reveal">
+            <Link to="/about">How I work and what a first session looks like.</Link> See this
+            approach in practice: explore the <Link to="/support">areas of support</Link>, read the{" "}
+            <Link to="/blog">researched case studies</Link>, hear{" "}
+            <Link to="/reviews">what clients say</Link>, or{" "}
+            <Link to="/book">book a conversation</Link>.
+          </p>
+        )}
       </div>
     </section>
   );
@@ -836,6 +840,7 @@ export function SelfCheck() {
 export const clientReviews = [
   {
     initials: "P.S.",
+    image: "/review-1.jpg",
     quote:
       "My anxiety had made peaceful sleep impossible for two years. Through her calming voice and hypnotherapy, I finally regained natural rest.",
     detail:
@@ -846,6 +851,7 @@ export const clientReviews = [
   },
   {
     initials: "A.M.",
+    image: "/review-2.jpg",
     quote:
       "I was sceptical of online hypnotherapy, but the video sessions were deeply impactful. She is remarkably gentle and perceptive.",
     detail:
@@ -856,6 +862,7 @@ export const clientReviews = [
   },
   {
     initials: "R.K.",
+    image: "/review-3.jpg",
     quote:
       "Trauma-informed in the truest sense. Her patience and respectful boundaries made me feel completely safe.",
     detail:
@@ -865,6 +872,64 @@ export const clientReviews = [
     reading: "the-month-end-panic",
   },
 ];
+function ReviewCard({
+  review: r,
+  index: i,
+}: {
+  review: (typeof clientReviews)[number];
+  index: number;
+}) {
+  const [imageFailed, setImageFailed] = useState(false);
+  return (
+    <article className="review-card" key={r.initials} style={{ animationDelay: `${i * 0.14}s` }}>
+      <Quote className="review-quote-mark" aria-hidden="true" />
+      <div className="review-stars" aria-label="Five out of five stars">
+        {Array.from({ length: 5 }).map((_, s) => (
+          <Star
+            key={s}
+            size={15}
+            fill="currentColor"
+            strokeWidth={0}
+            style={{ animationDelay: `${i * 0.14 + s * 0.08}s` }}
+          />
+        ))}
+      </div>
+      <blockquote>“{r.quote}”</blockquote>
+      <p className="review-detail">{r.detail}</p>
+      {studiesFromSlugs([r.reading]).map((story) => (
+        <Link
+          key={story.slug}
+          to="/blog/$slug"
+          params={{ slug: story.slug }}
+          className="review-read"
+        >
+          <span>Related reading</span>
+          {story.area}
+          <ArrowRight size={14} />
+        </Link>
+      ))}
+      <div className="review-person">
+        <span className="review-avatar">
+          {!imageFailed ? (
+            <img
+              src={r.image}
+              alt={`Profile photo of ${r.name}`}
+              loading="lazy"
+              decoding="async"
+              onError={() => setImageFailed(true)}
+            />
+          ) : (
+            r.initials
+          )}
+        </span>
+        <div>
+          <strong>{r.name}</strong>
+          <small>{r.mode}</small>
+        </div>
+      </div>
+    </article>
+  );
+}
 export function ClientReviews() {
   return (
     <section className="reviews-section">
@@ -882,45 +947,7 @@ export function ClientReviews() {
         </div>
         <div className="reviews-grid">
           {clientReviews.map((r, i) => (
-            <article
-              className="review-card"
-              key={r.initials}
-              style={{ animationDelay: `${i * 0.14}s` }}
-            >
-              <Quote className="review-quote-mark" aria-hidden="true" />
-              <div className="review-stars" aria-label="Five out of five stars">
-                {Array.from({ length: 5 }).map((_, s) => (
-                  <Star
-                    key={s}
-                    size={15}
-                    fill="currentColor"
-                    strokeWidth={0}
-                    style={{ animationDelay: `${i * 0.14 + s * 0.08}s` }}
-                  />
-                ))}
-              </div>
-              <blockquote>“{r.quote}”</blockquote>
-              <p className="review-detail">{r.detail}</p>
-              {studiesFromSlugs([r.reading]).map((story) => (
-                <Link
-                  key={story.slug}
-                  to="/blog/$slug"
-                  params={{ slug: story.slug }}
-                  className="review-read"
-                >
-                  <span>Related reading</span>
-                  {story.area}
-                  <ArrowRight size={14} />
-                </Link>
-              ))}
-              <div className="review-person">
-                <span className="review-avatar">{r.initials}</span>
-                <div>
-                  <strong>{r.name}</strong>
-                  <small>{r.mode}</small>
-                </div>
-              </div>
-            </article>
+            <ReviewCard key={r.initials} review={r} index={i} />
           ))}
         </div>
       </div>
