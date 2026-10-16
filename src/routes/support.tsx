@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageIntro, SupportGrid, CareNote, SelfCheck, BookingBand } from "@/components/therapy";
+import { CaseTeaser } from "@/components/case-links";
+import { ExploreNext } from "@/components/explore";
 import { pageHead } from "@/lib/clinic";
 export const Route = createFileRoute("/support")({
   head: () =>
@@ -23,6 +25,7 @@ function Support() {
         </div>
       </section>
       <SelfCheck />
+      <CaseTeaser />
       <section className="section-inner faq-section reveal">
         <span className="eyebrow">A SAFE SPACE TO HEAL & GROW</span>
         <h2>
@@ -43,6 +46,7 @@ function Support() {
           </p>
         </div>
       </section>
+      <ExploreNext current="/support" />
       <BookingBand />
     </>
   );

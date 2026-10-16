@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageIntro, ClientReviews, BookingBand } from "@/components/therapy";
+import { ExploreNext } from "@/components/explore";
 import { pageHead } from "@/lib/clinic";
 export const Route = createFileRoute("/reviews")({
   head: () =>
@@ -16,6 +17,7 @@ function Reviews() {
         A thoughtful space for genuine experiences, shared with care and complete confidentiality.
       </PageIntro>
       <ClientReviews />
+      <ExploreNext current="/reviews" />
       <BookingBand />
     </>
   );

@@ -44,11 +44,13 @@ import {
   whatsappUrl,
   type ConsultationType,
 } from "@/lib/clinic";
+import { caseStudies, slugForSupportIndex, studiesFromSlugs } from "@/lib/case-studies";
 export const doctorPortrait = "/swaliha-pic.webp";
 const navigation = [
-  { to: "/", label: "Overview" },
+  { to: "/", label: "Home" },
   { to: "/about", label: "About me" },
   { to: "/support", label: "Areas of support" },
+  { to: "/blog", label: "Blog" },
   { to: "/reviews", label: "Reviews" },
 ] as const;
 export function Brand() {
@@ -79,7 +81,7 @@ export function WebsiteShell({ children }: { children: React.ReactNode }) {
                 key={n.to}
                 to={n.to}
                 activeProps={{ className: "nav-active" }}
-                activeOptions={{ exact: true }}
+                activeOptions={{ exact: n.to === "/" }}
               >
                 {n.label}
               </Link>
@@ -155,8 +157,10 @@ const footerNav = [
   {
     heading: "Navigation",
     links: [
+      { to: "/", label: "Home" },
       { to: "/about", label: "About me" },
       { to: "/support", label: "Areas of support" },
+      { to: "/blog", label: "Blog & case studies" },
       { to: "/reviews", label: "Client reflections" },
       { to: "/book", label: "Book a session" },
     ],
@@ -240,6 +244,18 @@ export function SiteFooter() {
           </div>
         ))}
       </div>
+      <nav className="footer-reads" aria-label="Case studies">
+        <span className="footer-heading">Case studies</span>
+        <ul>
+          {caseStudies.map((study) => (
+            <li key={study.slug}>
+              <Link to="/blog/$slug" params={{ slug: study.slug }}>
+                {study.area}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
       <div className="footer-bottom">
         <p>
           © {new Date().getFullYear()} Swaliha Khanam · Clinical Hypnotherapist &amp; Mental Health
@@ -465,13 +481,19 @@ export function SupportGrid({ all = false }: { all?: boolean }) {
   return (
     <div className="support-grid reveal reveal-stagger">
       {supportAreas.slice(0, all ? 8 : 4).map(({ icon: Icon, title, text }, i) => (
-        <Link to="/support" className="support-item" key={title}>
+        <Link
+          to="/blog/$slug"
+          params={{ slug: slugForSupportIndex(i) }}
+          className="support-item"
+          key={title}
+        >
           <div className="support-top">
             <Icon strokeWidth={1.2} />
             <span>0{i + 1}</span>
           </div>
           <h3>{title}</h3>
           <p>{text}</p>
+          <span className="support-cta">Read the case study</span>
           <ArrowUpRight className="support-arrow" size={18} />
         </Link>
       ))}
@@ -691,6 +713,12 @@ export function AboutHero() {
             </div>
           ))}
         </div>
+        <p className="about-links reveal">
+          See this approach in practice: explore the <Link to="/support">areas of support</Link>,
+          read the <Link to="/blog">researched case studies</Link>, hear{" "}
+          <Link to="/reviews">what clients say</Link>, or{" "}
+          <Link to="/book">book a conversation</Link>.
+        </p>
       </div>
     </section>
   );
@@ -705,9 +733,29 @@ export const selfCheckPrompts = [
   "The emotional side of a chronic health condition",
   "Well-being concerns associated with ageing",
   "Wanting personal growth & self-understanding",
-];
+] as const;
+/** Which case studies speak to each prompt. Keys are typed to the prompts, so a typo fails to compile. */
+const selfCheckStudies: Record<(typeof selfCheckPrompts)[number], string[]> = {
+  "Stress, anxiety & emotional overwhelm": ["the-month-end-panic", "when-everything-feels-numb"],
+  "Sleep difficulties & trouble relaxing": ["awake-at-3-am"],
+  "Low self-confidence or self-esteem": ["the-quiet-promotion-decline"],
+  "Relationship & life difficulties": ["two-people-one-small-flat"],
+  "Unhelpful habits & patterns": ["the-11-pm-scroll"],
+  "Adjusting to difficult life experiences": ["when-everything-feels-numb"],
+  "The emotional side of a chronic health condition": ["learning-to-live-alongside-the-pain"],
+  "Well-being concerns associated with ageing": ["learning-to-live-alongside-the-pain"],
+  "Wanting personal growth & self-understanding": [
+    "the-quiet-promotion-decline",
+    "when-everything-feels-numb",
+  ],
+};
 export function SelfCheck() {
   const [selected, setSelected] = useState<string[]>([]);
+  const suggested = studiesFromSlugs([
+    ...new Set(
+      selected.flatMap((p) => selfCheckStudies[p as (typeof selfCheckPrompts)[number]] ?? []),
+    ),
+  ]);
   const toggle = (prompt: string) =>
     setSelected((prev) =>
       prev.includes(prompt) ? prev.filter((p) => p !== prompt) : [...prev, prompt],
@@ -720,7 +768,7 @@ export function SelfCheck() {
         ? "Even one of these is reason enough to talk to someone."
         : "That sounds like a lot to carry alone — and you don’t have to.";
   return (
-    <section className="selfcheck section-inner">
+    <section id="self-check" className="selfcheck section-inner">
       <BreathRings className="selfcheck-rings" />
       <div className="selfcheck-head reveal">
         <span className="eyebrow">
@@ -756,6 +804,23 @@ export function SelfCheck() {
           );
         })}
       </div>
+      <div className="selfcheck-reads" aria-live="polite">
+        {suggested.length > 0 && (
+          <>
+            <span>Case studies that may resonate</span>
+            <ul>
+              {suggested.map((study) => (
+                <li key={study.slug}>
+                  <Link to="/blog/$slug" params={{ slug: study.slug }}>
+                    {study.title}
+                    <ArrowRight size={14} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
       <div className="selfcheck-result reveal reveal-d2">
         <span className="selfcheck-count">{count} selected</span>
         <p>{message}</p>
@@ -777,6 +842,7 @@ export const clientReviews = [
       "Swaliha took time to listen to my roots without any rush. I left the Punjabi Bagh clinic feeling lighter than I had in years.",
     name: "Corporate Lead, New Delhi",
     mode: "In-person sessions",
+    reading: "awake-at-3-am",
   },
   {
     initials: "A.M.",
@@ -786,6 +852,7 @@ export const clientReviews = [
       "The tools she provided helped me dissolve imposter syndrome before major presentations and untangle long-standing family dynamics.",
     name: "Senior Academic, Bengaluru",
     mode: "Virtual video sessions",
+    reading: "the-quiet-promotion-decline",
   },
   {
     initials: "R.K.",
@@ -795,6 +862,7 @@ export const clientReviews = [
       "I never felt forced to recall painful events before I was ready. The grounding exercises have become second nature in handling panic.",
     name: "Client, Delhi NCR",
     mode: "Trauma-informed care",
+    reading: "the-month-end-panic",
   },
 ];
 export function ClientReviews() {
@@ -833,6 +901,18 @@ export function ClientReviews() {
               </div>
               <blockquote>“{r.quote}”</blockquote>
               <p className="review-detail">{r.detail}</p>
+              {studiesFromSlugs([r.reading]).map((story) => (
+                <Link
+                  key={story.slug}
+                  to="/blog/$slug"
+                  params={{ slug: story.slug }}
+                  className="review-read"
+                >
+                  <span>Related reading</span>
+                  {story.area}
+                  <ArrowRight size={14} />
+                </Link>
+              ))}
               <div className="review-person">
                 <span className="review-avatar">{r.initials}</span>
                 <div>
@@ -919,6 +999,21 @@ export function WhatIsHypnotherapy() {
               </div>
             ))}
           </div>
+          <p className="hypno-more">
+            Curious what a session is really like? Read{" "}
+            <Link to="/blog/$slug" params={{ slug: "afraid-of-the-dental-chair" }}>
+              how hypnosis helped with a procedure fear
+            </Link>
+            ,{" "}
+            <Link to="/blog/$slug" params={{ slug: "awake-at-3-am" }}>
+              how a recording supported better sleep
+            </Link>{" "}
+            or{" "}
+            <Link to="/blog/$slug" params={{ slug: "learning-to-live-alongside-the-pain" }}>
+              how it fits alongside chronic-pain care
+            </Link>
+            .
+          </p>
         </div>
         <aside className="hypno-card reveal reveal-d1">
           <div className="hypno-card-head">

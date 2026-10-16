@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Leaf, MapPin, Flower2 } from "lucide-react";
 import {
   AboutHero,
@@ -6,6 +6,7 @@ import {
   Botanical,
   BreathRings,
   CalmWaves,
+  CareNote,
   KeywordMarquee,
   SeedScatter,
   SupportGrid,
@@ -17,7 +18,28 @@ import {
   VisitClinic,
   doctorPortrait,
 } from "@/components/therapy";
+import { CaseTeaser } from "@/components/case-links";
+import { ExploreNext } from "@/components/explore";
+import { FaqSection } from "@/components/faq";
+import { Interlude, SectionDots, type DotItem } from "@/components/home-sections";
 import { pageHead } from "@/lib/clinic";
+
+/** The home page as a story: welcome, recognise, trust, understand, proof, doubts, act. */
+const homeSections: DotItem[] = [
+  { id: "welcome", label: "Welcome" },
+  { id: "begin", label: "Begin where you are" },
+  { id: "support", label: "Areas of support" },
+  { id: "self-check", label: "Self-check" },
+  { id: "meet", label: "Meet Swaliha" },
+  { id: "voices", label: "Client reflections" },
+  { id: "hypnotherapy", label: "How hypnotherapy works" },
+  { id: "stories", label: "Case studies" },
+  { id: "sensitive-care", label: "Sensitive care" },
+  { id: "questions", label: "Questions" },
+  { id: "book", label: "Book a conversation" },
+  { id: "visit", label: "Visit the clinic" },
+];
+
 export const Route = createFileRoute("/")({
   head: () =>
     pageHead(
@@ -29,7 +51,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <>
-      <section className="home-hero">
+      <section id="welcome" className="home-hero">
         <BreathRings className="hero-rings" />
         <SeedScatter className="hero-seeds" />
         <div className="hero-copy">
@@ -107,7 +129,10 @@ function Index() {
         <Botanical className="hero-botanical" />
       </section>
       <KeywordMarquee />
-      <section className="support-section">
+      <div id="begin" className="home-anchor">
+        <Interlude />
+      </div>
+      <section id="support" className="support-section home-anchor">
         <CalmWaves className="support-waves" />
         <div className="section-inner">
           <div className="section-heading reveal">
@@ -125,15 +150,50 @@ function Index() {
             </p>
           </div>
           <SupportGrid all />
+          <CareNote />
         </div>
       </section>
       <SelfCheck />
-      <AboutHero />
-      <WhatIsHypnotherapy />
-      <TraumaCare />
-      <ClientReviews />
-      <BookingBand />
-      <VisitClinic />
+      <div id="meet" className="home-anchor">
+        <AboutHero />
+      </div>
+      <div id="voices" className="home-anchor">
+        <ClientReviews />
+      </div>
+      <div id="hypnotherapy" className="home-anchor">
+        <WhatIsHypnotherapy />
+      </div>
+      <div id="stories" className="home-anchor">
+        <CaseTeaser />
+      </div>
+      <div id="sensitive-care" className="home-anchor">
+        <TraumaCare />
+      </div>
+      <div id="questions" className="home-anchor">
+        <FaqSection
+          ids={["control", "notsure", "confirmed", "video", "chronic"]}
+          eyebrow="BEFORE YOU DECIDE"
+          title={
+            <>
+              Questions people ask <em>first.</em>
+            </>
+          }
+          footer={
+            <>
+              More questions? Visit the <Link to="/book">booking page</Link> or{" "}
+              <Link to="/about">meet Swaliha</Link>.
+            </>
+          }
+        />
+      </div>
+      <div id="book" className="home-anchor">
+        <BookingBand />
+      </div>
+      <div id="visit" className="home-anchor">
+        <VisitClinic />
+      </div>
+      <ExploreNext current="/" />
+      <SectionDots items={homeSections} />
     </>
   );
 }

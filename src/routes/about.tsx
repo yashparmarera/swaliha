@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageIntro, AboutHero, BookingBand } from "@/components/therapy";
+import { ExploreNext } from "@/components/explore";
 import { pageHead } from "@/lib/clinic";
 export const Route = createFileRoute("/about")({
   head: () =>
@@ -38,6 +39,7 @@ function About() {
           </p>
         </div>
       </section>
+      <ExploreNext current="/about" />
       <BookingBand />
     </>
   );
