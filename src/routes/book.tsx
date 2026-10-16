@@ -5,7 +5,7 @@ export const Route = createFileRoute("/book")({
   head: () =>
     pageHead(
       "Book an Appointment",
-      "Request a clinic visit in Punjabi Bagh or a video consultation with Dr Swaliha Khanam via WhatsApp. Each consultation is ₹2,000.",
+      "Request a clinic visit in Punjabi Bagh or a video consultation with Swaliha Khanam via WhatsApp. Introductory offer: clinic visit ₹2,000, video consultation ₹1,800.",
     ),
   component: Book,
 });
@@ -27,8 +27,8 @@ function Book() {
           <summary>How do I request an appointment?</summary>
           <p>
             Select your preferred consultation type. WhatsApp will open with a message that includes
-            your choice and the ₹2,000 fee. Send the message to discuss availability and next steps
-            directly with the clinic.
+            your choice and the current offer fee. Send the message to discuss availability and next
+            steps directly with the clinic.
           </p>
         </details>
         <details>
@@ -41,8 +41,9 @@ function Book() {
         <details>
           <summary>Can I choose a video consultation?</summary>
           <p>
-            Yes. Both clinic visits and video consultations are available, each priced at ₹2,000.
-            Choose the option that works best for you.
+            Yes. Both clinic visits and video consultations are available. As an introductory offer,
+            a clinic visit is ₹2,000 (usually ₹3,000) and a video consultation is ₹1,800 (usually
+            ₹2,000). Choose the option that works best for you.
           </p>
         </details>
         <details>

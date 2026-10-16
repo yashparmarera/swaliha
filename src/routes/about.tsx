@@ -5,7 +5,7 @@ export const Route = createFileRoute("/about")({
   head: () =>
     pageHead(
       "About Me",
-      "Meet Dr Swaliha Khanam and learn about her compassionate, individual-centred clinical hypnotherapy and trauma-informed approach.",
+      "Meet Swaliha Khanam and learn about her compassionate, individual-centred clinical hypnotherapy and trauma-informed approach.",
     ),
   component: About,
 });
@@ -14,7 +14,7 @@ function About() {
     <>
       <PageIntro
         eyebrow="MEET YOUR THERAPIST"
-        title="Dr Swaliha Khanam"
+        title="Swaliha Khanam"
         accent="A space to be yourself."
       >
         Clinical Hypnotherapist & Mental Health Coach · Punjabi Bagh, New Delhi

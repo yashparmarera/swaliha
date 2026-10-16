@@ -5,7 +5,7 @@ export const Route = createFileRoute("/reviews")({
   head: () =>
     pageHead(
       "Reviews",
-      "Heartfelt reflections shared with permission by clients of Dr Swaliha Khanam, under complete anonymity to honour confidentiality.",
+      "Heartfelt reflections shared with permission by clients of Swaliha Khanam, under complete anonymity to honour confidentiality.",
     ),
   component: Reviews,
 });

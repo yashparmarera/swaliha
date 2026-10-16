@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
   head: () =>
     pageHead(
       "Clinical Hypnotherapy & Mental Well-being",
-      "Compassionate, individual-centred support with Dr Swaliha Khanam, Clinical Hypnotherapist and Mental Health Coach in Punjabi Bagh, New Delhi.",
+      "Compassionate, individual-centred support with Swaliha Khanam, Clinical Hypnotherapist and Mental Health Coach in Punjabi Bagh, New Delhi.",
     ),
   component: Index,
 });
@@ -54,7 +54,7 @@ function Index() {
             />
           </svg>
           <div className="hero-role">
-            Dr Swaliha Khanam · Clinical Hypnotherapist & Mental Health Coach
+            Swaliha Khanam · Clinical Hypnotherapist & Mental Health Coach
           </div>
           <p>
             Compassionate, confidential support for stress, anxiety, sleep difficulties,
@@ -65,7 +65,8 @@ function Index() {
             <AppointmentButton type="Video consultation" variant="quiet" />
           </div>
           <div className="hero-fee">
-            ₹2,000 per consultation · Book via WhatsApp — appointment subject to slot confirmation.
+            Introductory offer — consultations from ₹1,800 · Book via WhatsApp, appointment subject
+            to slot confirmation.
           </div>
           <div className="hero-location">
             <MapPin size={14} />
@@ -84,7 +85,7 @@ function Index() {
             <div className="portrait-frame">
               <img
                 src={doctorPortrait}
-                alt="Dr Swaliha Khanam, Clinical Hypnotherapist and Mental Health Coach"
+                alt="Swaliha Khanam, Clinical Hypnotherapist and Mental Health Coach"
                 width={1066}
                 height={1280}
                 fetchPriority="high"
@@ -98,7 +99,7 @@ function Index() {
           <div className="portrait-caption">
             <Leaf size={22} strokeWidth={1.1} />
             <div>
-              <strong>Dr Swaliha Khanam</strong>
+              <strong>Swaliha Khanam</strong>
               <small>Clinical Hypnotherapist · Mental Health Coach</small>
             </div>
           </div>

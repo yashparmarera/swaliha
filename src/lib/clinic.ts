@@ -1,14 +1,22 @@
 export const clinic = {
-  name: "Dr Swaliha Khanam",
+  name: "Swaliha Khanam",
   role: "Clinical Hypnotherapist & Mental Health Coach",
   phone: "918796142665",
-  fee: 2000,
   address:
     "Doctors Plaza Punjabi Bagh, 63, W Ave Rd, above Luxury Akhada, West Punjabi Bagh, New Delhi, Delhi, 110026",
 };
 export type ConsultationType = "Clinic visit" | "Video consultation";
+/** Introductory-offer pricing: `original` is the usual fee (shown struck through), `price` is the live discounted fee. */
+export const pricing: Record<ConsultationType, { original: number; price: number }> = {
+  "Clinic visit": { original: 3000, price: 2000 },
+  "Video consultation": { original: 2000, price: 1800 },
+};
+export function formatRupees(amount: number) {
+  return `₹${amount.toLocaleString("en-IN")}`;
+}
 export function appointmentUrl(type: ConsultationType) {
-  const message = `Hello Dr Swaliha Khanam, I would like to request a ${type.toLowerCase()} appointment (₹2,000). Please let me know the next steps and availability.`;
+  const { price } = pricing[type];
+  const message = `Hello Swaliha Khanam, I would like to request a ${type.toLowerCase()} appointment (${formatRupees(price)}). Please let me know the next steps and availability.`;
   return whatsappUrl(message);
 }
 export function whatsappUrl(message: string) {
@@ -16,7 +24,7 @@ export function whatsappUrl(message: string) {
 }
 export function selfCheckUrl(selected: string[]) {
   const intro =
-    "Hello Dr Swaliha Khanam, I went through the list of concerns on your website and would like to talk.";
+    "Hello Swaliha Khanam, I went through the list of concerns on your website and would like to talk.";
   const body = selected.length
     ? `\n\nThe ones that felt familiar to me:\n${selected.map((s) => `• ${s}`).join("\n")}`
     : "";
@@ -27,9 +35,9 @@ export const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(
 export function pageHead(title: string, description: string) {
   return {
     meta: [
-      { title: `${title} | Dr Swaliha Khanam` },
+      { title: `${title} | Swaliha Khanam` },
       { name: "description", content: description },
-      { property: "og:title", content: `${title} | Dr Swaliha Khanam` },
+      { property: "og:title", content: `${title} | Swaliha Khanam` },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

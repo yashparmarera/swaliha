@@ -38,6 +38,8 @@ import {
   clinic,
   directionsUrl,
   mapEmbedUrl,
+  pricing,
+  formatRupees,
   selfCheckUrl,
   whatsappUrl,
   type ConsultationType,
@@ -56,7 +58,7 @@ export function Brand() {
         <Flower2 strokeWidth={1.1} />
       </span>
       <span className="brand-text">
-        <strong>Dr Swaliha Khanam</strong>
+        <strong>Swaliha Khanam</strong>
         <small>HEAL. GROW. THRIVE.</small>
       </span>
     </Link>
@@ -132,7 +134,7 @@ function WhatsAppIcon({ size = 26 }: { size?: number }) {
   );
 }
 export function WhatsAppFloat() {
-  const message = "Hello Dr Swaliha Khanam, I would like to ask about an appointment.";
+  const message = "Hello Swaliha Khanam, I would like to ask about an appointment.";
   return (
     <a
       className="wa-float"
@@ -187,14 +189,14 @@ export function SiteFooter() {
                 <strong>In-clinic consultation</strong>
                 <small>In-person session in Punjabi Bagh</small>
               </div>
-              <span className="footer-fee">₹2,000</span>
+              <PriceTag type="Clinic visit" className="footer-fee" />
             </div>
             <div className="footer-mode">
               <div>
                 <strong>Video consultation</strong>
                 <small>Connect securely from your own space</small>
               </div>
-              <span className="footer-fee">₹2,000</span>
+              <PriceTag type="Video consultation" className="footer-fee" />
             </div>
           </div>
         </div>
@@ -207,7 +209,7 @@ export function SiteFooter() {
             </li>
             <li>
               <Phone size={16} />
-              <a href={whatsappUrl("Hello Dr Swaliha Khanam,")}>+91 8796142665</a>
+              <a href={whatsappUrl("Hello Swaliha Khanam,")}>+91 8796142665</a>
             </li>
             <li>
               <Clock size={16} />
@@ -240,10 +242,10 @@ export function SiteFooter() {
       </div>
       <div className="footer-bottom">
         <p>
-          © {new Date().getFullYear()} Dr Swaliha Khanam · Clinical Hypnotherapist &amp; Mental
-          Health Coach. Support offered here is complementary and does not replace emergency,
-          psychiatric, or medical care. In a crisis, please contact Tele-MANAS (14416) or your local
-          emergency services.
+          © {new Date().getFullYear()} Swaliha Khanam · Clinical Hypnotherapist &amp; Mental Health
+          Coach. Support offered here is complementary and does not replace emergency, psychiatric,
+          or medical care. In a crisis, please contact Tele-MANAS (14416) or your local emergency
+          services.
         </p>
         <div className="footer-legal">
           <Link to="/about">Confidentiality</Link>
@@ -251,6 +253,15 @@ export function SiteFooter() {
         </div>
       </div>
     </footer>
+  );
+}
+export function PriceTag({ type, className = "" }: { type: ConsultationType; className?: string }) {
+  const { original, price } = pricing[type];
+  return (
+    <span className={`price-tag ${className}`}>
+      <span className="price-was">{formatRupees(original)}</span>
+      <span className="price-now">{formatRupees(price)}</span>
+    </span>
   );
 }
 export function AppointmentButton({
@@ -491,7 +502,7 @@ export function BookingBand() {
             <span>
               Clinic visit<small>Punjabi Bagh, New Delhi</small>
             </span>
-            <strong>₹2,000</strong>
+            <PriceTag type="Clinic visit" />
             <AppointmentButton variant="amber" />
           </div>
           <div>
@@ -499,7 +510,7 @@ export function BookingBand() {
             <span>
               Video consultation<small>Connect from your own space</small>
             </span>
-            <strong>₹2,000</strong>
+            <PriceTag type="Video consultation" />
             <AppointmentButton type="Video consultation" variant="quiet" />
           </div>
           <p className="booking-note">
@@ -606,7 +617,7 @@ export function AboutHero() {
           {!imageFailed && (
             <img
               src={doctorPortrait}
-              alt="Dr Swaliha Khanam, Clinical Hypnotherapist, at her clinic in Punjabi Bagh, New Delhi"
+              alt="Swaliha Khanam, Clinical Hypnotherapist, at her clinic in Punjabi Bagh, New Delhi"
               width={1066}
               height={1280}
               loading="lazy"
@@ -615,7 +626,7 @@ export function AboutHero() {
             />
           )}
         </div>
-        <h3>Dr Swaliha Khanam</h3>
+        <h3>Swaliha Khanam</h3>
         <p className="about-card-role">Clinical Hypnotherapist · Mental Health Coach</p>
         <div className="about-card-divider" />
         <p className="about-card-loc">
@@ -631,7 +642,7 @@ export function AboutHero() {
       <div className="about-narrative">
         <span className="eyebrow reveal">
           <span className="tiny-dot" />
-          ABOUT DR SWALIHA
+          ABOUT SWALIHA
         </span>
         <h2 className="reveal reveal-d1">
           Support that meets you <em>where you are</em>
@@ -656,9 +667,9 @@ export function AboutHero() {
           with others.
         </p>
         <p className="reveal reveal-d2">
-          Dr Swaliha Khanam is committed to creating a safe, supportive, and non-judgmental space
-          where you can express yourself openly, understand your experiences, and work towards
-          greater emotional well-being and personal growth — at your own pace.
+          Swaliha Khanam is committed to creating a safe, supportive, and non-judgmental space where
+          you can express yourself openly, understand your experiences, and work towards greater
+          emotional well-being and personal growth — at your own pace.
         </p>
         <blockquote className="about-pull reveal reveal-d2">
           “I believe meaningful change begins with feeling heard, understood, and respected.”
@@ -763,7 +774,7 @@ export const clientReviews = [
     quote:
       "My anxiety had made peaceful sleep impossible for two years. Through her calming voice and hypnotherapy, I finally regained natural rest.",
     detail:
-      "Dr Swaliha took time to listen to my roots without any rush. I left the Punjabi Bagh clinic feeling lighter than I had in years.",
+      "Swaliha took time to listen to my roots without any rush. I left the Punjabi Bagh clinic feeling lighter than I had in years.",
     name: "Corporate Lead, New Delhi",
     mode: "In-person sessions",
   },
@@ -946,7 +957,7 @@ export const traumaAssurances = [
 ];
 export function TraumaCare() {
   const message =
-    "Hello Dr Swaliha Khanam, I would like to make a confidential enquiry about sensitive, trauma-informed support.";
+    "Hello Swaliha Khanam, I would like to make a confidential enquiry about sensitive, trauma-informed support.";
   return (
     <section className="trauma-care section-inner">
       <div className="trauma-card reveal">
@@ -988,7 +999,7 @@ export function TraumaCare() {
   );
 }
 export function VisitClinic() {
-  const directionsMessage = `Hello Dr Swaliha Khanam, I would like directions to the clinic for my appointment. Could you please confirm the location?\n\n${directionsUrl}`;
+  const directionsMessage = `Hello Swaliha Khanam, I would like directions to the clinic for my appointment. Could you please confirm the location?\n\n${directionsUrl}`;
   return (
     <section className="visit-clinic section-inner">
       <div className="visit-copy reveal">

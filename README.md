@@ -1,6 +1,6 @@
-# Dr Swaliha Khanam — Therapy Website
+# Swaliha Khanam — Therapy Website
 
-Marketing and booking website for Dr Swaliha Khanam's clinical hypnotherapy and mental health practice in Punjabi Bagh, New Delhi.
+Marketing and booking website for Swaliha Khanam's clinical hypnotherapy and mental health practice in Punjabi Bagh, New Delhi.
 
 Built with React 19, TanStack Start / Router, Tailwind CSS, and a shadcn/ui component library.
 
