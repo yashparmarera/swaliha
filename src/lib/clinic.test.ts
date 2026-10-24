@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aboutQuestionUrl, appointmentUrl, pricing } from "./clinic";
+import { aboutQuestionUrl, appointmentUrl, clinic, pricing, telUrl } from "./clinic";
 describe("Supplied consultation rules", () => {
   it("offers clinic visits at a discounted ₹2,000 (from ₹3,000) and includes the fee in the request", () => {
     expect(pricing["Clinic visit"]).toEqual({ original: 3000, price: 2000 });
@@ -18,6 +18,11 @@ describe("Supplied consultation rules", () => {
       expect(url.origin).toBe("https://wa.me");
       expect(url.pathname).toBe("/918796142665");
     }
+  });
+  it("exposes one phone number as a display string and a tel: link", () => {
+    expect(clinic.phoneDisplay).toBe("+91 8796142665");
+    expect(telUrl).toBe("tel:+918796142665");
+    expect(clinic.phoneDisplay.replace(/\D/g, "")).toBe(clinic.phone);
   });
   it("builds the About page question link from the shared WhatsApp helper", () => {
     const url = new URL(aboutQuestionUrl());

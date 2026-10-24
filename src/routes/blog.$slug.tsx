@@ -173,7 +173,7 @@ function CaseStudyPage() {
               </ol>
             </section>
 
-            <section className="case-cta reveal" aria-labelledby="cta-title">
+            <section className="case-cta reveal" aria-labelledby="cta-title" data-wa-hide>
               <h3 id="cta-title">If this sounds familiar</h3>
               <p>
                 You don’t need to be at breaking point to ask for support. Explore the area of

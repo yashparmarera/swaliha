@@ -82,7 +82,7 @@ function Index() {
             Compassionate, confidential support for stress, anxiety, sleep difficulties,
             self-confidence, and the patterns that hold you back.
           </p>
-          <div className="hero-actions">
+          <div className="hero-actions" data-wa-hide>
             <AppointmentButton />
             <AppointmentButton type="Video consultation" variant="quiet" />
           </div>

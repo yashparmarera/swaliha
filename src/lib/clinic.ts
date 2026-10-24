@@ -2,6 +2,7 @@ export const clinic = {
   name: "Swaliha Khanam",
   role: "Clinical Hypnotherapist & Mental Health Coach",
   phone: "918796142665",
+  phoneDisplay: "+91 8796142665",
   address:
     "Doctors Plaza Punjabi Bagh, 63, W Ave Rd, above Luxury Akhada, West Punjabi Bagh, New Delhi, Delhi, 110026",
 };
@@ -19,6 +20,7 @@ export function appointmentUrl(type: ConsultationType) {
   const message = `Hello Swaliha Khanam, I would like to request a ${type.toLowerCase()} appointment (${formatRupees(price)}). Please let me know the next steps and availability.`;
   return whatsappUrl(message);
 }
+export const telUrl = `tel:+${clinic.phone}`;
 export function whatsappUrl(message: string) {
   return `https://wa.me/${clinic.phone}?text=${encodeURIComponent(message)}`;
 }

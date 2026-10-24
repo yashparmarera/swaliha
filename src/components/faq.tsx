@@ -103,7 +103,7 @@ export function FaqSection({
 }) {
   const items = faqItems();
   return (
-    <section className="faq-section section-inner reveal">
+    <section className="faq-section section-inner reveal" data-wa-hide>
       <span className="eyebrow">{eyebrow}</span>
       <h2>
         {title ?? (

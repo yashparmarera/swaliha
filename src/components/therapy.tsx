@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import {
   ArrowUpRight,
@@ -41,6 +41,7 @@ import {
   pricing,
   formatRupees,
   selfCheckUrl,
+  telUrl,
   whatsappUrl,
   type ConsultationType,
 } from "@/lib/clinic";
@@ -67,12 +68,38 @@ export function Brand() {
   );
 }
 export function WebsiteShell({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // The menu is "open" only for the route it was opened on, so navigating closes it.
+  const [openAt, setOpenAt] = useState<string | null>(null);
+  const open = openAt === pathname;
+  const setOpen = (next: boolean) => setOpenAt(next ? pathname : null);
+  const navId = useId();
+  const headerRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   useScrollReveal([pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setOpenAt(null);
+      menuButtonRef.current?.focus();
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) setOpenAt(null);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [open]);
   return (
     <>
-      <header className="site-header">
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
+      <header className="site-header" ref={headerRef}>
         <div className="header-inner">
           <Brand />
           <nav aria-label="Main navigation" className="desktop-nav">
@@ -96,35 +123,40 @@ export function WebsiteShell({ children }: { children: React.ReactNode }) {
             variant="ghost"
             size="icon"
             className="menu-button"
+            ref={menuButtonRef}
             onClick={() => setOpen(!open)}
             aria-label={open ? "Close navigation" : "Open navigation"}
+            aria-expanded={open}
+            aria-controls={navId}
           >
-            {open ? <X /> : <Menu />}
+            {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
           </Button>
         </div>
         {open && (
-          <nav className="mobile-nav" aria-label="Mobile navigation">
+          <nav id={navId} className="mobile-nav" aria-label="Mobile navigation">
             {navigation.map((n) => (
-              <Link key={n.to} to={n.to} onClick={() => setOpen(false)}>
+              <Link
+                key={n.to}
+                to={n.to}
+                activeOptions={{ exact: n.to === "/" }}
+                onClick={() => setOpen(false)}
+              >
                 {n.label}
               </Link>
             ))}
-            <Link to="/book" onClick={() => setOpen(false)}>
-              Book an appointment
-            </Link>
+            <Button asChild variant="therapy">
+              <Link to="/book" onClick={() => setOpen(false)}>
+                Book an appointment <ArrowUpRight />
+              </Link>
+            </Button>
           </nav>
         )}
       </header>
-      <main>{children}</main>
+      <main id="main" tabIndex={-1}>
+        {children}
+      </main>
       <SiteFooter />
       <WhatsAppFloat />
-      <div className="mobile-appointment">
-        <Button asChild variant="therapy">
-          <Link to="/book">
-            Book an appointment <ArrowUpRight />
-          </Link>
-        </Button>
-      </div>
     </>
   );
 }
@@ -137,9 +169,32 @@ function WhatsAppIcon({ size = 26 }: { size?: number }) {
 }
 export function WhatsAppFloat() {
   const message = "Hello Swaliha Khanam, I would like to ask about an appointment.";
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [hidden, setHidden] = useState(false);
+  // Step aside while a region that carries its own booking/WhatsApp CTA is on screen.
+  useEffect(() => {
+    const regions = document.querySelectorAll("[data-wa-hide]");
+    if (!regions.length || typeof IntersectionObserver === "undefined") {
+      setHidden(false);
+      return;
+    }
+    const visible = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) visible.add(entry.target);
+        else visible.delete(entry.target);
+      }
+      setHidden(visible.size > 0);
+    });
+    regions.forEach((region) => observer.observe(region));
+    return () => {
+      observer.disconnect();
+      setHidden(false);
+    };
+  }, [pathname]);
   return (
     <a
-      className="wa-float"
+      className={hidden ? "wa-float is-hidden" : "wa-float"}
       href={whatsappUrl(message)}
       target="_blank"
       rel="noreferrer"
@@ -168,7 +223,7 @@ const footerNav = [
 ] as const;
 export function SiteFooter() {
   return (
-    <footer className="site-footer">
+    <footer className="site-footer" data-wa-hide>
       <div className="footer-grid reveal reveal-stagger">
         <div className="footer-brand">
           <Brand />
@@ -213,7 +268,7 @@ export function SiteFooter() {
             </li>
             <li>
               <Phone size={16} />
-              <a href={whatsappUrl("Hello Swaliha Khanam,")}>+91 8796142665</a>
+              <a href={whatsappUrl("Hello Swaliha Khanam,")}>{clinic.phoneDisplay}</a>
             </li>
             <li>
               <Clock size={16} />
@@ -479,7 +534,7 @@ export const supportAreas = [
 ];
 export function SupportGrid({ all = false }: { all?: boolean }) {
   return (
-    <div className="support-grid reveal reveal-stagger">
+    <div className="support-grid reveal reveal-stagger" data-wa-hide>
       {supportAreas.slice(0, all ? 8 : 4).map(({ icon: Icon, title, text }, i) => (
         <Link
           to="/blog/$slug"
@@ -502,7 +557,7 @@ export function SupportGrid({ all = false }: { all?: boolean }) {
 }
 export function BookingBand() {
   return (
-    <section className="booking-band">
+    <section className="booking-band" data-wa-hide>
       <CalmWaves className="booking-waves" />
       <div className="section-inner booking-inner">
         <div className="reveal">
@@ -772,7 +827,7 @@ export function SelfCheck() {
         ? "Even one of these is reason enough to talk to someone."
         : "That sounds like a lot to carry alone — and you don’t have to.";
   return (
-    <section id="self-check" className="selfcheck section-inner">
+    <section id="self-check" className="selfcheck section-inner" data-wa-hide>
       <BreathRings className="selfcheck-rings" />
       <div className="selfcheck-head reveal">
         <span className="eyebrow">
@@ -1081,7 +1136,7 @@ export function TraumaCare() {
   const message =
     "Hello Swaliha Khanam, I would like to make a confidential enquiry about sensitive, trauma-informed support.";
   return (
-    <section className="trauma-care section-inner">
+    <section className="trauma-care section-inner" data-wa-hide>
       <div className="trauma-card reveal">
         <div className="trauma-copy">
           <span className="trauma-badge">
@@ -1123,7 +1178,7 @@ export function TraumaCare() {
 export function VisitClinic() {
   const directionsMessage = `Hello Swaliha Khanam, I would like directions to the clinic for my appointment. Could you please confirm the location?\n\n${directionsUrl}`;
   return (
-    <section className="visit-clinic section-inner">
+    <section className="visit-clinic section-inner" data-wa-hide>
       <div className="visit-copy reveal">
         <span className="eyebrow">
           <span className="tiny-dot" />
@@ -1159,7 +1214,7 @@ export function VisitClinic() {
             </li>
             <li>
               <Phone size={16} />
-              +91 8796142665
+              <a href={telUrl}>{clinic.phoneDisplay}</a>
             </li>
           </ul>
         </div>
